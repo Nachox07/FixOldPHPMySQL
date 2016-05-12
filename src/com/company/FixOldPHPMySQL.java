@@ -23,14 +23,15 @@ public class FixOldPHPMySQL {
 
                 if (file.substring(file.lastIndexOf(".")).equalsIgnoreCase(".php")) {
 
-                    String lines = FileUtils.readFileToString(new File(p + file), "UTF-8");
+                    File tmp = new File(p + file);
+
+                    String lines = FileUtils.readFileToString(tmp, "UTF-8");
 
                     lines = lines.replaceAll("mysql_query\\(", "mysqli_query\\(" + cnvar + ", ");
                     lines = lines.replaceAll("mysql_fetch_array", "mysqli_fetch_assoc");
                     lines = lines.replaceAll("mysql_", "mysqli_");
                     lines = lines.replaceAll(", " + cnvar, "");
 
-                    File tmp = new File(p + file);
                     FileUtils.writeStringToFile(tmp, lines, "UTF-8");
 
                     System.out.println("File " + file + " changed");
