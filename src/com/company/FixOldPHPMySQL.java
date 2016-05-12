@@ -8,29 +8,29 @@ import java.io.*;
  */
 public class FixOldPHPMySQL {
 
+    private String cnvar;
+    private String lines;
+
     /**
-     * @Param String path This is the path of the directory where files will be modified
-     * @Param String cnvar PHP var which contains the MySQL connection
+     * @Param path This is the path of the directory where files will be modified
+     * @Param cnvar PHP var which contains the MySQL connection
      * */
     public FixOldPHPMySQL(String p, String cnvar) {
 
         File path = new File(p);
-        cnvar = "\\$" + cnvar;
+        this.cnvar = "\\$" + cnvar;
 
         for (String file : path.list()) {
 
             try {
 
-                if (file.substring(file.lastIndexOf(".")).equalsIgnoreCase(".php")) {
+                if (file.substring(file.lastIndexOf(".")).equals(".php")) {
 
                     File tmp = new File(p + file);
 
                     String lines = FileUtils.readFileToString(tmp, "UTF-8");
 
-                    lines = lines.replaceAll("mysql_query\\(", "mysqli_query\\(" + cnvar + ", ");
-                    lines = lines.replaceAll("mysql_fetch_array", "mysqli_fetch_assoc");
-                    lines = lines.replaceAll("mysql_", "mysqli_");
-                    lines = lines.replaceAll(", " + cnvar, "");
+                    changeMysql(lines);
 
                     FileUtils.writeStringToFile(tmp, lines, "UTF-8");
 
@@ -45,6 +45,22 @@ public class FixOldPHPMySQL {
             }
 
         }
+
+    }
+
+    /**
+     *
+     * @param l file content to be replaced with new mysqli functions
+     * @return returns all the content changed
+     */
+    public String changeMysql(String l) {
+
+        l = l.replaceAll("mysql_query\\(", "mysqli_query\\(" + cnvar + ", ");
+        l = l.replaceAll("mysql_fetch_array", "mysqli_fetch_assoc");
+        l = l.replaceAll("mysql_", "mysqli_");
+        l = l.replaceAll(", " + cnvar, "");
+
+        return l;
 
     }
 
