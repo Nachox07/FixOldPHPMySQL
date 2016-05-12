@@ -12,7 +12,7 @@ public class FixOldPHPMySQL {
      * @Param String path This is the path of the directory where files will be modified
      * @Param String cnvar PHP var which contains the MySQL connection
      * */
-    public FixOldPHPMySQL(String p, String cnvar) throws StringIndexOutOfBoundsException{
+    public FixOldPHPMySQL(String p, String cnvar) {
 
         File path = new File(p);
         cnvar = "\\$" + cnvar;
